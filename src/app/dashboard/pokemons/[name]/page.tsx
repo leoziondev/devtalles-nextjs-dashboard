@@ -1,26 +1,35 @@
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Image from "next/image";
-import { Pokemon } from "@/pokemons";
+import { Pokemon, PokemonsResponse } from "@/pokemons";
 
 interface Props {
-    params: { id: string};
+    params: { name: string};
 }
 
 export async function generateStaticParams() {
-  const static151Pokemons = Array.from({ length: 151 }).map((v,i) => `${i + 1}`);
 
-  return static151Pokemons.map(id => ({
-    id: id
+  const data: PokemonsResponse = await 
+  fetch(`https://pokeapi.co/api/v2/pokemon?limit=151`)
+    .then((res) => res.json());
+
+  const static151Pokemons = data.results.map((pokemon) => ({
+    name: pokemon.name
+  }))
+
+  // throw new Error("Error")
+
+  return static151Pokemons.map( ({name}) => ({
+    name: name
   }))
 }
 
 export async function generateMetadata({params}: Props): Promise<Metadata> {
     try {
-        const { id, name } = await getPokemon(params.id)
+        const { id, name } = await getPokemon(params.name)
     
         return {
-            title: `#${id} - ${name}`,
+            title: `Pokemon - ${name}`,
             description: `${name} Pokemon page`
         }
     } catch (error) {
@@ -31,10 +40,10 @@ export async function generateMetadata({params}: Props): Promise<Metadata> {
     }    
 }
 
-const getPokemon = async(id: string): Promise<Pokemon> => {
+const getPokemon = async(name: string): Promise<Pokemon> => {
     try {
-        const pokemon = await fetch(`https://pokeapi.co/api/v2/pokemon/${id}`, {
-        // cache: 'force-cache'
+        const pokemon = await fetch(`https://pokeapi.co/api/v2/pokemon/${name}`, {
+        // cache: 'force-cache',
         next: {
             revalidate: 60 * 60 * 30 * 6 // seg - min - dias - meses
         }
@@ -48,14 +57,15 @@ const getPokemon = async(id: string): Promise<Pokemon> => {
 }
 
 export default async function PokemonPage({ params }: Props) {
-    const pokemon = await getPokemon(params.id);    
+    const pokemon = await getPokemon(params.name);   
+    console.log(pokemon) 
   
     return (
       <div className="flex mt-5 flex-col items-center text-slate-800">
         <div className="relative flex flex-col items-center rounded-[20px] w-[700px] mx-auto bg-white bg-clip-border  shadow-lg  p-3">
           <div className="mt-2 mb-8 w-full">
             <h1 className="px-2 text-xl font-bold text-slate-700 capitalize">
-              #{pokemon.id} {pokemon.name}
+              Pokemon - {pokemon.name}
             </h1>
             <div className="flex flex-col justify-center items-center">
               <Image
