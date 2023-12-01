@@ -1,4 +1,4 @@
-import { SimpleWidget } from "@/components";
+import { WidgetsGrid } from "@/components";
 
 export default function MainPage() {
   return (
@@ -6,9 +6,7 @@ export default function MainPage() {
       <h1 className="mt-2 text-3xl">Dashboard</h1>
       <span className="text-md text-blue-500">General Information</span>
 
-      <div className="flex flex-wrap p-2 mt-8">
-        <SimpleWidget />
-      </div>
+      <WidgetsGrid />
     </div>
   );
 }
