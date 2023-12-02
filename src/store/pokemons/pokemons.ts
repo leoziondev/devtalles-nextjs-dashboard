@@ -1,5 +1,5 @@
-import { SimplePokemon } from '@/pokemons';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
+import { SimplePokemon } from '@/pokemons';
 
 interface PokemonsState {
     [key: string]: SimplePokemon
