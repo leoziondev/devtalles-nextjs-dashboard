@@ -8,13 +8,13 @@ import { NoFavoritePokemons } from "./NoFavoritePokemons"
 
 
 export const FavoritesPokemons = () => {
-    const favoritesPokemons = useAppSelector(state => Object.values(state.pokemons))
-    const [pokemons, setPokemons] = useState(favoritesPokemons)
+    const favoritesPokemons = useAppSelector(state => Object.values(state.pokemons.favorites))
+    // const [pokemons, setPokemons] = useState(favoritesPokemons)
 
     return (
         <>
-            {pokemons.length
-                ? (<PokemonGrid pokemons={pokemons} />)
+            {favoritesPokemons.length
+                ? (<PokemonGrid pokemons={favoritesPokemons} />)
                 : (<NoFavoritePokemons />)
             }            
         </>
